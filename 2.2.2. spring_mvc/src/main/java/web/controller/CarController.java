@@ -15,9 +15,10 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = "/cars")
 public class CarController {
+    @Autowired
+    @Qualifier("listCars")
     private List<Car> cars;
 
-//    @RequestMapping(value = "/cars", produces = "text/plain;charset=UTF-8")
     @GetMapping
     public String printCars(ModelMap model) {
         model.addAttribute("cars", cars);
@@ -26,19 +27,9 @@ public class CarController {
 
     @GetMapping(params = "count")
     public String gerCars(@RequestParam("count") int count, ModelMap model) {
-        if (count > 4) {
-            return printCars(model);
-        } else {
-            if (count > 0) {
-                model.addAttribute("cars", cars.stream().limit(count).collect(Collectors.toList()));
-            }
+        if (count > 0) {
+            model.addAttribute("cars", cars.stream().limit(count).collect(Collectors.toList()));
         }
         return "index";
-    }
-
-    @Autowired
-    @Qualifier("listCars")
-    public void setCars(List<Car> cars) {
-        this.cars = cars;
     }
 }
